@@ -1,7 +1,4 @@
-import ui.App;
-
-import java.io.File;
-import java.io.InputStreamReader;
+package group_02.client;
 
 public class Main {
     public static void main(String[] args) {
