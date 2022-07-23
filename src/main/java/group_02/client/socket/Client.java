@@ -1,7 +1,11 @@
 package group_02.client.socket;
 
+import group_02.client.models.Enote;
+
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.util.ArrayList;
 
 public class Client {
     public final static String SERVER_IP = "127.0.0.1";
@@ -28,11 +32,12 @@ public class Client {
     public static boolean signIn(String usr, String pwd){
         try {
             dos.writeUTF("signIn");
+
             dos.writeUTF(usr);
             dos.writeUTF(pwd);
             String res = dis.readUTF();
 
-            return  res.equals("thanh cong");
+            return res.equals("success");
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -42,14 +47,78 @@ public class Client {
     public static boolean signUp(String usr, String pwd){
         try {
             dos.writeUTF("signUp");
+
             dos.writeUTF(usr);
             dos.writeUTF(pwd);
             String res = dis.readUTF();
 
-            return  res.equals("thanh cong");
+            return res.equals("success");
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
+
+    public static boolean saveEnote(String usr, String fileName){
+        try {
+            dos.writeUTF("saveNote");
+            File file = new File("D:\\FileUpload\\" + fileName);
+            byte[] bytes = Files.readAllBytes(file.toPath());
+
+            dos.writeUTF(usr);
+            dos.writeUTF(fileName);
+            dos.writeInt(bytes.length);
+            dos.write(bytes);
+
+            String res = dis.readUTF();
+
+            return res.equals("success");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean getEnote(String username, int noteId){
+        try {
+            dos.writeUTF("getNote");
+
+            dos.writeUTF(username);
+            dos.writeInt(noteId);
+
+            dis.readAllBytes();
+
+            //to do : read file to UI without saving file
+            String res = dis.readUTF();
+            return res.equals("success");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static ArrayList<Enote> getEnoteList(String username){
+        ArrayList<Enote> noteList = new ArrayList<>();
+        try {
+            dos.writeUTF("getNoteList");
+
+            dos.writeUTF(username);
+            int size = dis.readInt();
+            for (int i = 0; i < size ; i++) {
+                String usr = dis.readUTF();
+                int noteId = dis.readInt();
+                String filePath = dis.readUTF();
+                String fileType = dis.readUTF();
+                noteList.add(new Enote(noteId,usr,filePath,fileType));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return noteList;
+    }
+
+
+
+
 }
