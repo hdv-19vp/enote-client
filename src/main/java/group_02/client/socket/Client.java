@@ -1,6 +1,7 @@
 package group_02.client.socket;
 
 import group_02.client.models.Enote;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -86,9 +87,15 @@ public class Client {
             dos.writeUTF(username);
             dos.writeInt(noteId);
 
-            dis.readAllBytes();
+            byte[] bytes = null;
+            int length = dis.readInt();
+            if(length > 0) {
+                bytes = new byte[length];
+                dis.readFully(bytes);
+            }
+            String filename = dis.readUTF();
+            FileUtils.writeByteArrayToFile(new File("D:\\FileDownload\\"+filename.substring(filename.indexOf("e\\")+2)), bytes);
 
-            //to do : read file to UI without saving file
             String res = dis.readUTF();
             return res.equals("success");
         } catch (IOException e) {
