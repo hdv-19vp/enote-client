@@ -4,10 +4,18 @@
  */
 package group_02.client.ui;
 
+import group_02.client.models.Enote;
+import group_02.client.socket.Client;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.ListIterator;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -24,6 +32,24 @@ public class ListNote extends javax.swing.JFrame {
         jButton1.setToolTipText("Add Text Note");
         jButton2.setToolTipText("Add Image Note");
         jButton3.setToolTipText("Add File Note");
+
+
+        DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
+        tblModel.setRowCount(0);
+        ArrayList<Enote> list = Client.getEnoteList(Client.getUsername());
+        ListIterator<Enote> listIterator = list.listIterator();
+
+        // Traversing elements using next() method
+        while (listIterator.hasNext()) {
+            Enote temp = listIterator.next();
+            int id = temp.getId();
+            String name = temp.getFilePath().substring(temp.getFilePath().indexOf(Client.getUsername())+Client.getUsername().length()+1).trim();
+            String type = temp.getFileType();
+            String model[] = {String.valueOf(id),name,type};
+            tblModel.addRow(model);
+        }
+
+
         
         jButton1.addActionListener(new ActionListener() {
             @Override
@@ -39,12 +65,33 @@ public class ListNote extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setAcceptAllFileFilterUsed(false);
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("image file", "png", "jpg");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("image file", "png", "jpg", "jpeg", "gif");
                 fileChooser.addChoosableFileFilter(filter);
                 int returnVal = fileChooser.showOpenDialog(null);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     java.io.File file = fileChooser.getSelectedFile();
-                    System.out.println(file);
+                    try {
+                        byte[] bytes = Files.readAllBytes(file.toPath());
+                        Client.saveEnote(Client.getUsername(),file.getName(),bytes);
+                        tblModel.setRowCount(0);
+                        ArrayList<Enote> list = Client.getEnoteList(Client.getUsername());
+                        ListIterator<Enote> listIterator = list.listIterator();
+
+                        // Traversing elements using next() method
+                        while (listIterator.hasNext()) {
+                            Enote temp = listIterator.next();
+                            int id = temp.getId();
+                            String name = temp.getFilePath().substring(temp.getFilePath().indexOf(Client.getUsername())+Client.getUsername().length()+1).trim();
+                            String type = temp.getFileType();
+                            String model[] = {String.valueOf(id),name,type};
+                            tblModel.addRow(model);
+                        }
+
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    //System.out.println(file);
                 }
             }
         });
@@ -56,10 +103,73 @@ public class ListNote extends javax.swing.JFrame {
                 int returnVal = fileChooser.showOpenDialog(null);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     java.io.File file = fileChooser.getSelectedFile();
-                    System.out.println(file);
+                    try {
+                        byte[] bytes = Files.readAllBytes(file.toPath());
+                        Client.saveEnote(Client.getUsername(),file.getName(),bytes);
+                        tblModel.setRowCount(0);
+                        ArrayList<Enote> list = Client.getEnoteList(Client.getUsername());
+                        ListIterator<Enote> listIterator = list.listIterator();
+
+                        // Traversing elements using next() method
+                        while (listIterator.hasNext()) {
+                            Enote temp = listIterator.next();
+                            int id = temp.getId();
+                            String name = temp.getFilePath().substring(temp.getFilePath().indexOf(Client.getUsername())+Client.getUsername().length()+1).trim();
+                            String type = temp.getFileType();
+                            String model[] = {String.valueOf(id),name,type};
+                            tblModel.addRow(model);
+                        }
+
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
+
+
+        jTable1.setDefaultEditor(Object.class, null);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = jTable1.rowAtPoint(evt.getPoint());
+                int col = jTable1.columnAtPoint(evt.getPoint());
+                if (evt.getClickCount() == 2 && jTable1.getSelectedRow() != -1) {
+                    String type = jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2).toString();
+                    String id = jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 0).toString();
+                    switch (type){
+                        case "txt":
+                            InfoTextNote ft = new InfoTextNote(id);
+                            ft.setVisible(true);
+                            ListNote.this.setVisible(false);
+                            break;
+                        case "jpeg","png","jpg":
+                            InfoImgNote fi = new InfoImgNote(id);
+                            fi.setVisible(true);
+                            ListNote.this.setVisible(false);
+                            break;
+                        default:
+                            InfoFileNote ff = new InfoFileNote(id);
+                            ff.setVisible(true);
+                            ListNote.this.setVisible(false);
+                            break;
+                    }
+                }
+
+            }
+        });
+
+
+
+
+
+
+        jTextField1.setText(Client.getUsername());
+        jTextField2.setText(Client.getServerIp());
+        jTextField3.setText(String.valueOf(jTable1.getRowCount()));
+        jTextField4.setText(String.valueOf(Client.getServerPort()));
+
     }
 
     /**

@@ -140,13 +140,19 @@ public class Signup extends javax.swing.JFrame {
                     Validpass.setForeground(Color.RED);
                 }
                 if (!password.getText().equals("Password")) {
+
+
+                 
+
                     if (password.getText().length() < 8) {
                         Validpass.setText("Password must be at least 8 characters");
                         Validpass.setForeground(Color.RED);
                     } else {
                         Validpass.setForeground(Color.WHITE);
                     }
+
                 }
+
                 if (confirm.getText().equals("Confirm password")) {
                     Validconfirm.setText("Password error");
                     Validconfirm.setForeground(Color.RED);

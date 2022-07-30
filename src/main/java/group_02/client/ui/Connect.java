@@ -5,6 +5,8 @@ package group_02.client.ui;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
+import group_02.client.socket.Client;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -14,6 +16,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
+import java.io.IOException;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +32,11 @@ public class Connect extends javax.swing.JFrame {
      * Creates new form Login
      */
     public Connect() {
+        try {
+            Client.closeConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         initComponents();
         jButton_Login.requestFocus();
         
@@ -90,7 +98,8 @@ public class Connect extends javax.swing.JFrame {
                     Validpass.setForeground(Color.WHITE);
                 }
                 if(!jTextField1.getText().equals("IPadress") && !jTextField2.getText().equals("Port")) {
-                    boolean result = true;
+                    //Client.setServerIp(jTextField1.getText());
+                    boolean result = Client.connect();
                     if (result == true) {
                         JOptionPane optionPane = new JOptionPane("Connect successful",JOptionPane.WARNING_MESSAGE);
                         JDialog dialog = optionPane.createDialog("Connect status");
