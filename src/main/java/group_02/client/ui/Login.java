@@ -5,6 +5,8 @@ package group_02.client.ui;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
+import group_02.client.socket.Client;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -126,7 +128,8 @@ public class Login extends javax.swing.JFrame {
                     Validpass.setForeground(Color.WHITE);
                 }
                 if(!username.getText().equals("Username") && !password.getText().equals("Password")) {
-                    boolean result = true;
+                    Client.setUsername(username.getText());
+                    boolean result = Client.signIn(username.getText(),password.getText());
                     if (result == true) {
                         JOptionPane optionPane = new JOptionPane("Login successful",JOptionPane.WARNING_MESSAGE);
                         JDialog dialog = optionPane.createDialog("Login status");

@@ -137,8 +137,10 @@ public class Signup extends javax.swing.JFrame {
                     Validpass.setForeground(Color.RED);
                 }
                 if (!password.getText().equals("Password")) {
+
                     Validpass.setForeground(Color.WHITE);
                 }
+
                 if (confirm.getText().equals("Confirm password")) {
                     Validconfirm.setForeground(Color.RED);
                 }

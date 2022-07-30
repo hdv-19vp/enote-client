@@ -4,9 +4,19 @@
  */
 package group_02.client.ui;
 
+import group_02.client.models.Enote;
+import group_02.client.socket.Client;
+import org.apache.commons.io.FileUtils;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFileChooser;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -18,15 +28,46 @@ public class InfoImgNote extends javax.swing.JFrame {
     /**
      * Creates new form ListNote
      */
-    public InfoImgNote() {
+    public InfoImgNote(String id) {
         initComponents();
-        
+        int id_ = Integer.parseInt(id);
+        Enote e = new Enote("","");
+        Client.getEnote(Client.getUsername(),id_, e);
+
+        byte[] bytes = e.getBuffer();
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        try {
+            BufferedImage bImage2 = ImageIO.read(bis);
+            Image img_resize = bImage2.getScaledInstance(400, 300,
+                    Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(img_resize);
+            jLabel3.setIcon(imageIcon);
+            jLabel3.setHorizontalAlignment(JLabel.CENTER);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+
+        String name = e.getFilePath().substring(e.getFilePath().indexOf(Client.getUsername())+Client.getUsername().length()+1).trim();
+
+        jTextField1.setText(name);
+        jTextField3.setText("Image Note");
+
+        jTextField1.setEditable(false);
+        jTextField3.setEditable(false);
+
+
         jButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddText fram1 = new AddText();
-                fram1.setVisible(true);
-                InfoImgNote.this.dispose();
+                JFileChooser f = new JFileChooser();
+                f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                f.showSaveDialog(null);
+                try {
+                    FileUtils.writeByteArrayToFile(new File(String.valueOf(f.getSelectedFile()) + "\\"+ name), bytes);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         
@@ -187,7 +228,7 @@ public class InfoImgNote extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InfoImgNote().setVisible(true);
+                //new InfoImgNote().setVisible(true);
             }
         });
     }

@@ -5,8 +5,11 @@
 
 package group_02.client.ui;
 
+import group_02.client.socket.Client;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.charset.StandardCharsets;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
@@ -19,12 +22,17 @@ public class AddText extends javax.swing.JFrame {
     /** Creates new form AddText */
     public AddText() {
         initComponents();
-        
+
         jButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //todo: send request type textnote and respond resault
-                boolean result = true;
+
+                String string = jTextArea1.getText();
+                if(string.length() == 0 )
+                    return;
+                byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+
+                boolean result = Client.saveEnote(Client.getUsername(),jTextField1.getText()+".txt", bytes);
                 if (result == true) {
                     JOptionPane optionPane = new JOptionPane("Upload successful",JOptionPane.WARNING_MESSAGE);
                     JDialog dialog = optionPane.createDialog("Upload status");
@@ -41,7 +49,7 @@ public class AddText extends javax.swing.JFrame {
                 }
             }
         });
-        
+
         jButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -9,11 +9,44 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class Client {
-    public final static String SERVER_IP = "127.0.0.1";
-    public final static int SERVER_PORT = 7;
+    public static String SERVER_IP = "127.0.0.1";
+    public static int SERVER_PORT = 7;
+    public static String username = "";
+
+    public static int getServerPort() {
+        return SERVER_PORT;
+    }
+
+    public static void setServerPort(int serverPort) {
+        SERVER_PORT = serverPort;
+    }
+
+    public static String getUsername() {
+        return username;
+    }
+
+    public static void setUsername(String username) {
+        Client.username = username;
+    }
+
     public static Socket socket = null;
     public static DataInputStream dis = null;
     public static DataOutputStream dos = null;
+
+    public static String getServerIp() {
+        return SERVER_IP;
+    }
+
+    public static void setServerIp(String serverIp) {
+        SERVER_IP = serverIp;
+    }
+
+
+    public static void closeConnection() throws IOException {
+        if(socket!= null)
+            socket.close();
+    }
+
 
     public static boolean connect() {
         try {
@@ -60,11 +93,11 @@ public class Client {
         }
     }
 
-    public static boolean saveEnote(String usr, String fileName){
+    public static boolean saveEnote(String usr, String fileName,byte[] bytes){
         try {
             dos.writeUTF("saveNote");
-            File file = new File("D:\\FileUpload\\" + fileName);
-            byte[] bytes = Files.readAllBytes(file.toPath());
+            //File file = new File("D:\\FileUpload\\" + fileName);
+            //byte[] bytes = Files.readAllBytes(file.toPath());
 
             dos.writeUTF(usr);
             dos.writeUTF(fileName);
@@ -80,7 +113,7 @@ public class Client {
         }
     }
 
-    public static boolean getEnote(String username, int noteId){
+    public static boolean getEnote(String username, int noteId, Enote enote){
         try {
             dos.writeUTF("getNote");
 
@@ -94,8 +127,9 @@ public class Client {
                 dis.readFully(bytes);
             }
             String filename = dis.readUTF();
-            FileUtils.writeByteArrayToFile(new File("D:\\FileDownload\\"+filename.substring(filename.indexOf("e\\")+2)), bytes);
-
+            //FileUtils.writeByteArrayToFile(new File("D:\\FileDownload\\"+filename.substring(filename.indexOf("e\\")+2)), bytes);
+            enote.setBuffer(bytes);
+            enote.setFilePath(filename);
             String res = dis.readUTF();
             return res.equals("success");
         } catch (IOException e) {

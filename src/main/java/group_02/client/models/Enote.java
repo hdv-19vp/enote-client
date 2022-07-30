@@ -23,10 +23,9 @@ public class Enote {
         this.fileType = fileType;
     }
 
-    public Enote(String username, String filePath, String fileType) {
+    public Enote(String username, String filePath) {
         this.username = username;
         this.filePath = filePath;
-        this.fileType = fileType;
     }
 
     public int getId() {
