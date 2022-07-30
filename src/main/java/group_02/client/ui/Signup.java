@@ -17,6 +17,8 @@ import java.awt.font.TextAttribute;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Admin
@@ -134,24 +136,58 @@ public class Signup extends javax.swing.JFrame {
                     Validuser.setForeground(Color.WHITE);
                 }
                 if (password.getText().equals("Password")) {
+                    Validpass.setText("Invalid password");        
                     Validpass.setForeground(Color.RED);
                 }
                 if (!password.getText().equals("Password")) {
 
-                    Validpass.setForeground(Color.WHITE);
+
+                 
+
+                    if (password.getText().length() < 8) {
+                        Validpass.setText("Password must be at least 8 characters");
+                        Validpass.setForeground(Color.RED);
+                    } else {
+                        Validpass.setForeground(Color.WHITE);
+                    }
+
                 }
 
                 if (confirm.getText().equals("Confirm password")) {
+                    Validconfirm.setText("Password error");
                     Validconfirm.setForeground(Color.RED);
                 }
                 if (!confirm.getText().equals("Confirm password")) {
-                    Validconfirm.setForeground(Color.WHITE);
+                    if (!confirm.getText().equals(password.getText())) {
+                        Validconfirm.setText("Confirm password does not match");
+                        Validconfirm.setForeground(Color.RED);
+                    } else {
+                        Validconfirm.setForeground(Color.WHITE);
+                    }
                 }
                 if(jCheckBox.isSelected()) {
                     Validcheck.setForeground(Color.WHITE);
                 }
                 if(!jCheckBox.isSelected()) {
                     Validcheck.setForeground(Color.RED);
+                }
+                if(!username.getText().equals("Username") && password.getText().length() >= 8 && confirm.getText().equals(password.getText())
+                    && jCheckBox.isSelected()) {
+                    boolean result = true;
+                    if (result == true) {
+                        JOptionPane optionPane = new JOptionPane("Signup successful",JOptionPane.WARNING_MESSAGE);
+                        JDialog dialog = optionPane.createDialog("Signup status");
+                        dialog.setAlwaysOnTop(true);
+                        dialog.setVisible(true);
+                        Login fram1 = new Login();
+                        fram1.setVisible(true);
+                        Signup.this.dispose();
+                    } else {
+                        JOptionPane optionPane = new JOptionPane("Signup failed",JOptionPane.WARNING_MESSAGE);
+                        JDialog dialog = optionPane.createDialog("Signup status");
+                        dialog.setAlwaysOnTop(true);
+                        dialog.setVisible(true);
+                    }
                 }
             }
         });
