@@ -48,6 +48,7 @@ public class InfoImgNote extends javax.swing.JFrame {
         }
 
 
+
         String name = e.getFilePath().substring(e.getFilePath().indexOf(Client.getUsername())+Client.getUsername().length()+1).trim();
 
         jTextField1.setText(name);

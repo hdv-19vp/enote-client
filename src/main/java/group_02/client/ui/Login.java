@@ -7,8 +7,7 @@ package group_02.client.ui;
 
 import group_02.client.socket.Client;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -16,11 +15,14 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
+import java.io.File;
+import java.io.IOException;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
 /**
  *
  * @author Admin
@@ -111,7 +113,32 @@ public class Login extends javax.swing.JFrame {
         
         Validuser.setForeground(Color.white);
         Validpass.setForeground(Color.white);
-        
+
+
+
+        File file1 = new File("C:\\Users\\Hoan\\Desktop\\MMT\\enote-client\\src\\main\\java\\group_02\\client\\ui\\img\\icons8_person_20px.png");
+        File file2 = new File("C:\\Users\\Hoan\\Desktop\\MMT\\enote-client\\src\\main\\java\\group_02\\client\\ui\\img\\icons8_lock_20px.png");
+
+        try {
+            Image image = ImageIO.read(file1);
+            Image image2 = ImageIO.read(file2);
+
+            Image img_resize = image.getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(),
+                    Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(img_resize);
+            jLabel1.setIcon(imageIcon);
+
+            Image img_resize2 = image2.getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(),
+                    Image.SCALE_SMOOTH);
+            ImageIcon imageIcon2 = new ImageIcon(img_resize2);
+            jLabel2.setIcon(imageIcon2);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         jButton_Login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
