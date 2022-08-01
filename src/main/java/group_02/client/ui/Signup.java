@@ -5,8 +5,9 @@ package group_02.client.ui;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-import java.awt.Color;
-import java.awt.Font;
+import group_02.client.socket.Client;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -14,11 +15,14 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
+import java.io.File;
+import java.io.IOException;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
 /**
  *
  * @author Admin
@@ -173,7 +177,7 @@ public class Signup extends javax.swing.JFrame {
                 }
                 if(!username.getText().equals("Username") && password.getText().length() >= 8 && confirm.getText().equals(password.getText())
                     && jCheckBox.isSelected()) {
-                    boolean result = true;
+                    boolean result = Client.signUp(username.getText(),password.getText());
                     if (result == true) {
                         JOptionPane optionPane = new JOptionPane("Signup successful",JOptionPane.WARNING_MESSAGE);
                         JDialog dialog = optionPane.createDialog("Signup status");
@@ -183,7 +187,7 @@ public class Signup extends javax.swing.JFrame {
                         fram1.setVisible(true);
                         Signup.this.dispose();
                     } else {
-                        JOptionPane optionPane = new JOptionPane("Signup failed",JOptionPane.WARNING_MESSAGE);
+                        JOptionPane optionPane = new JOptionPane("Username already taken",JOptionPane.WARNING_MESSAGE);
                         JDialog dialog = optionPane.createDialog("Signup status");
                         dialog.setAlwaysOnTop(true);
                         dialog.setVisible(true);
@@ -191,6 +195,42 @@ public class Signup extends javax.swing.JFrame {
                 }
             }
         });
+
+        File file1 = new File("C:\\Users\\Hoan\\Desktop\\MMT\\enote-client\\src\\main\\java\\group_02\\client\\ui\\img\\icons8_person_20px.png");
+        File file2 = new File("C:\\Users\\Hoan\\Desktop\\MMT\\enote-client\\src\\main\\java\\group_02\\client\\ui\\img\\icons8_lock_20px.png");
+        File file3 = new File("C:\\Users\\Hoan\\Desktop\\MMT\\enote-client\\src\\main\\java\\group_02\\client\\ui\\img\\icons8_checked_radio_button_20px.png");
+
+        try {
+            Image image = ImageIO.read(file1);
+            Image image2 = ImageIO.read(file2);
+            Image image3 = ImageIO.read(file3);
+
+            Image img_resize = image.getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(),
+                    Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(img_resize);
+            jLabel2.setIcon(imageIcon);
+
+            Image img_resize2 = image2.getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(),
+                    Image.SCALE_SMOOTH);
+            ImageIcon imageIcon2 = new ImageIcon(img_resize2);
+            jLabel3.setIcon(imageIcon2);
+
+
+            Image img_resize3 = image3.getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(),
+                    Image.SCALE_SMOOTH);
+            ImageIcon imageIcon3 = new ImageIcon(img_resize3);
+            jLabel1.setIcon(imageIcon3);
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
     }
     
 
